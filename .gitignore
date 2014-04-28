@@ -1,0 +1,7 @@
+*.iml
+*.ipr
+.idea
+.grunt
+node_modules
+bower_components
+build
