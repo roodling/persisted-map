@@ -2,6 +2,10 @@ describe('persistentMap', function () {
 
 	'use strict';
 
+	before(function () {
+		localStorage.clear();
+		sessionStorage.clear();
+	});
 	describe('basic map behavior', function () {
 
 
@@ -131,13 +135,30 @@ describe('persistentMap', function () {
 
 	});
 
+	describe('expiry', function () {
+		describe('global exiry', function () {
+
+			it('should return values which has not expired', function () {
+
+				var map = persistentMap.create('test-local-expiry', 'local', 1000 * 10); // expire in ten seconds
+				map.put('foo', 'bar');
+				expect(map.get('foo')).to.equal('bar');
+			});
+			it('should not return expired values', function () {
+
+				var map = persistentMap.create('test-local-expiry', 'local', -1000); // expired one second ago
+				map.put('foo', 'bar');
+				expect(map.get('foo')).to.be.undefined;
+			});
+		});
+	});
 	describe('DOM storage', function () {
 		it('should store to session storage on configured name', function () {
 			var map = persistentMap.create('test-session-storage', 'session');
 			map.put('foo', 'bar');
 
 			var stored = JSON.parse(sessionStorage.getItem('test-session-storage'));
-			expect(stored['foo']).to.equal('bar');
+			expect(stored['foo'].value).to.equal('bar');
 		});
 
 		it('should store to local storage on configured name', function () {
@@ -146,7 +167,7 @@ describe('persistentMap', function () {
 
 			var stored = JSON.parse(localStorage.getItem('test-local-storage'));
 			console.log('stored', stored);
-			expect(stored['foo']).to.equal('bar');
+			expect(stored['foo'].value).to.equal('bar');
 		});
 	});
 
