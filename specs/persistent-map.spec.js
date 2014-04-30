@@ -1,4 +1,4 @@
-describe('persistentMap', function () {
+describe('persistedMap', function () {
 
 	'use strict';
 
@@ -9,20 +9,20 @@ describe('persistentMap', function () {
 	describe('basic map behavior', function () {
 
 
-		it('should expose persistentMap on global object', function () {
-			expect(persistentMap).to.exist;
+		it('should expose persistedMap on global object', function () {
+			expect(persistedMap).to.exist;
 		});
 
 
 		describe('create()', function () {
 			it('should create new instance', function () {
-				var map = persistentMap.create('test');
+				var map = persistedMap.create('test');
 				expect(map).to.exist;
 			});
 
 			it('should create new instance every time', function () {
-				var map1 = persistentMap.create('test');
-				var map2 = persistentMap.create('test');
+				var map1 = persistedMap.create('test');
+				var map2 = persistedMap.create('test');
 				expect(map1).to.not.equal(map2);
 			});
 		});
@@ -75,7 +75,7 @@ describe('persistentMap', function () {
 		describe('put() and get()', function () {
 			var map;
 			beforeEach(function () {
-				map = persistentMap.create('test');
+				map = persistedMap.create('test');
 			});
 
 			testHelper.items.forEach(function (item) {
@@ -96,7 +96,7 @@ describe('persistentMap', function () {
 
 		describe('size()', function () {
 			it('should return correct size', function () {
-				var map = persistentMap.create('test');
+				var map = persistedMap.create('test');
 				testHelper.putAll(map);
 				expect(map.size()).to.equal(testHelper.items.length);
 			});
@@ -105,7 +105,7 @@ describe('persistentMap', function () {
 		describe('remove()', function () {
 			var map;
 			beforeEach(function () {
-				map = persistentMap.create('test');
+				map = persistedMap.create('test');
 			});
 
 			it('should remove stored value', function () {
@@ -126,7 +126,7 @@ describe('persistentMap', function () {
 
 		describe('clear()', function () {
 			it('should remove all values', function () {
-				var map = persistentMap.create('test');
+				var map = persistedMap.create('test');
 				testHelper.putAll(map);
 				map.clear();
 				testHelper.assertAllRemoved(map);
@@ -140,13 +140,13 @@ describe('persistentMap', function () {
 
 			it('should return values which has not expired', function () {
 
-				var map = persistentMap.create('test-local-expiry', 'local', 1000 * 10); // expire in ten seconds
+				var map = persistedMap.create('test-local-expiry', 'local', 1000 * 10); // expire in ten seconds
 				map.put('foo', 'bar');
 				expect(map.get('foo')).to.equal('bar');
 			});
 			it('should not return expired values', function () {
 
-				var map = persistentMap.create('test-local-expiry', 'local', -1000); // expired one second ago
+				var map = persistedMap.create('test-local-expiry', 'local', -1000); // expired one second ago
 				map.put('foo', 'bar');
 				expect(map.get('foo')).to.be.undefined;
 			});
@@ -154,7 +154,7 @@ describe('persistentMap', function () {
 	});
 	describe('DOM storage', function () {
 		it('should store to session storage on configured name', function () {
-			var map = persistentMap.create('test-session-storage', 'session');
+			var map = persistedMap.create('test-session-storage', 'session');
 			map.put('foo', 'bar');
 
 			var stored = JSON.parse(sessionStorage.getItem('test-session-storage'));
@@ -162,7 +162,7 @@ describe('persistentMap', function () {
 		});
 
 		it('should store to local storage on configured name', function () {
-			var map = persistentMap.create('test-local-storage', 'local');
+			var map = persistedMap.create('test-local-storage', 'local');
 			map.put('foo', 'bar');
 
 			var stored = JSON.parse(localStorage.getItem('test-local-storage'));

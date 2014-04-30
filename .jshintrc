@@ -30,6 +30,6 @@
 		"expect": false,
 		"should": false,
 		"sinon": false,
-		"persistentMap": false
+		"persistedMap": false
 	}
 }

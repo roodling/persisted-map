@@ -1,9 +1,20 @@
-(function (global, webStorageFactory, mapFactory) {
-	'use strict';
-	global.persistentMap = mapFactory(webStorageFactory(global));
-}(this, function (global) {
+(function (global, persistedItem, persistedMap) {
 
 	'use strict';
+
+	var modules = {
+		global: global
+	};
+
+	persistedItem(modules, modules.persistedItem = {});
+	persistedMap(modules, global.persistedMap = modules.persistedMap = {});
+
+}(this, function (modules, exports) {
+
+
+	'use strict';
+
+	var global = modules.global;
 
 	function serialize(data) {
 		return JSON.stringify(data);
@@ -13,119 +24,130 @@
 		return JSON.parse(data);
 	}
 
-	var storages = ['session', 'local'].reduce(function (storages, strategy) {
+	function getStorage(strategy) {
+		return global[strategy + 'Storage'];
+	}
 
-		var storage = window[strategy + 'Storage'];
+	function isSupported(strategy) {
+		return !!getStorage(strategy);
+	}
 
-		storages[strategy] = {
-			isSupported: function () {
-				return !!storage;
-			},
-			store: function (key, data) {
-				data = data || {};
-				storage.setItem(key, serialize(data));
-			},
-			retrieve: function (key) {
-				return deserialize(storage.getItem(key)) || {};
-			},
-			remove: function (key) {
-				storage.removeItem(key);
-			}
+	function retrieve(strategy, key) {
+		var storage = getStorage(strategy);
+		return deserialize(storage.getItem(key)) || {};
+	}
 
-		};
+	function store(strategy, key, data) {
+		var storage = getStorage(strategy);
+		storage.setItem(key, serialize(data));
+	}
 
-		return storages;
+	function clear(strategy, key) {
+		var storage = getStorage(strategy);
+		storage.removeItem(key);
+	}
 
-	}, {});
-
-	return {
-		getStorage: function (strategy) {
-			return storages[strategy];
+	var persistedItem = {
+		init: function (strategy, key) {
+			this.strategy = strategy;
+			this.key = key;
+		},
+		retrieve: function () {
+			return retrieve(this.strategy, this.key);
+		},
+		store: function (data) {
+			store(this.strategy, this.key, data);
+		},
+		clear: function () {
+			clear(this.strategy, this.key);
 		}
+
 	};
 
-}, function (webStorage) {
+	exports.create = function (strategy, key) {
+		if (isSupported(strategy)) {
+			var item = Object.create(persistedItem);
+			item.init(strategy, key);
+			return item;
+		}
+
+	};
+
+
+}, function (modules, exports) {
 
 	'use strict';
 
-	function hasExpired(item) {
-		return item && item.expiry && item.expiry < Date.now();
+	var persistedItem = modules.persistedItem;
+
+	function hasEntryExpired(entry) {
+		return entry && entry.expiry && entry.expiry < Date.now();
 	}
 
-	function createItem(value, expiry) {
+	function createEntry(value, expiry) {
 		return {
 			expiry: Date.now() + expiry,
 			value: value
 		};
 	}
 
-	function getMap(storage, key) {
-		return storage.retrieve(key);
-	}
-
-	function setMap(storage, key, map) {
-		return storage.store(key, map);
-	}
-	function clearMap(storage, key) {
-		return storage.remove(key);
-	}
-
-	var persistentMap = {
-		init: function (mapKey, storage, expiry) {
-			this.storage = storage;
-			this.mapKey = mapKey;
+	var persistedMap = {
+		init: function (persistedItem, expiry) {
+			this.peristedItem = persistedItem;
 			this.expiry = expiry;
 		},
+
 		put: function (key, value) {
-			var map = getMap(this.storage, this.mapKey);
-			map[key] = createItem(value, this.expiry);
-			this.storage.store(this.mapKey, map);
+			var map = this.peristedItem.retrieve();
+			map[key] = createEntry(value, this.expiry);
+			this.peristedItem.store(map);
 		},
 		get: function (key) {
-			var map = getMap(this.storage, this.mapKey);
+			var map = this.peristedItem.retrieve();
+			var entry = map[key];
 
-			var item = map[key];
-
-			if (hasExpired(item)) {
+			if (hasEntryExpired(entry)) {
 				this.remove(key);
 				return;
 			}
 
-			return item && item.value;
+			return entry && entry.value;
 		},
 		size: function () {
-			var map = getMap(this.storage, this.mapKey);
+			var map = this.peristedItem.retrieve();
 			return Object.keys(map).length;
 		},
 		remove: function (key) {
-			var map = getMap(this.storage, this.mapKey);
+			var map = this.peristedItem.retrieve();
 			delete map[key];
-			setMap(this.storage, this.mapKey, map);
+			this.peristedItem.store(map);
 		},
 		clear: function () {
-			clearMap(this.storage, this.mapKey);
+			this.peristedItem.clear();
 		}
 	};
 
 
-	return {
-		create: function (key, strategy, expiry) {
-			if (!key) {
-				console.warn('You must provide key.');
-				return;
-			}
+	exports.create = function (key, strategy, expiry) {
+		var map;
+		var item;
 
-			var storage = webStorage.getStorage(strategy || 'local');
-
-			if (!storage || !storage.isSupported()) {
-				console.warn('Web storage "' + strategy + '" is not supported');
-				return;
-			}
-
-			var map = Object.create(persistentMap);
-			map.init(key, storage, expiry);
-			return map;
+		if (!key) {
+			console.warn('You must provide key.');
+			return;
 		}
+
+		item = persistedItem.create(strategy || 'local', key);
+
+		if (!item) {
+			console.warn('Web storage "' + strategy + '" is not supported');
+			return;
+		}
+
+		map = Object.create(persistedMap);
+		map.init(item, expiry);
+
+		return map;
 	};
 
 
