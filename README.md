@@ -48,7 +48,7 @@ map.put('expireMe', 'noo', 5*60*1000);	// expiry entry in 5 minutes
 
   With [bower](http://bower.io):
 
-    $ bower install [to be added]
+    $ bower install persisted-map
 
   With a stand-alone build:
 
