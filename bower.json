@@ -1,0 +1,30 @@
+{
+	"name": "persisted-map",
+	"version": "0.1.0",
+	"homepage": "https://github.com/robertodling/persisted-map",
+	"authors": [
+		"Robert Ödling <robert.odling@gmail.com>"
+	],
+	"description": "Lightweight map that persists to web storage.",
+	"main": "build/persisted-map.min.js",
+	"moduleType": [
+		"globals"
+	],
+	"keywords": [
+		"map",
+		"localStorage",
+		"sessionStorage",
+		"storage",
+		"web storage",
+		"DOM storage"
+	],
+	"license": "MIT",
+	"ignore": [
+		"**/.*",
+		"*.js",
+		"**/*.json",
+		"node_modules",
+		"bower_components",
+		"specs"
+	]
+}
