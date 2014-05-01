@@ -9,11 +9,14 @@ Creating
 
 ```js
 
-var map = persistedMap.create('my-map'); 						// persisted to local storage under key 'my-map'
+// persisted to local storage under key 'my-map'
+var map = persistedMap.create('my-map');
 
-var map = persistedMap.create('my-map', 'session');				// persisted to session storage
+// persisted to session storage
+var map = persistedMap.create('my-map', 'session');
 
-var map = persistedMap.create('my-map', 'local', 10*60*1000);	// expire entries in 10 minutes
+// expire entries in 10 minutes
+var map = persistedMap.create('my-map', 'local', 10*60*1000);
 
 ```
 
@@ -47,13 +50,13 @@ map.put('expireMe', 'noo', 5*60*1000);	// expiry entry in 5 minutes
 
     $ bower install [to be added]
 
-  With a stand-alone build
+  With a stand-alone build:
 
     <script src='persisted.map.min.js'></script>
 
 
 
-## Running tests and building
+## Running tests and build
 
   Install dependencies:
 
