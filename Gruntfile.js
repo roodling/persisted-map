@@ -34,7 +34,7 @@ module.exports = function (grunt) {
 		uglify: {
 			build: {
 				files: {
-					'build/persistent-map.min.js': ['src/persistent-map.js']
+					'build/persisted-map.min.js': ['src/persisted-map.js']
 				}
 			}
 		}

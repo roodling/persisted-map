@@ -1,7 +1,7 @@
 {
-  "name": "persistent-map",
+  "name": "persisted-map",
   "version": "0.1.0",
-  "description": "Map that persists to web storage",
+  "description": "Lightweight map that persists to web storage.",
   "main": "grunt",
   "dependencies": {
     "grunt": "~0.4.4",
@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/robertodling/persistent-map.git"
+    "url": "git://github.com/robertodling/persisted-map.git"
   },
   "keywords": [
     "map",
@@ -41,7 +41,7 @@
   "author": "Robert Ödling",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/robertodling/persistent-map/issues"
+    "url": "https://github.com/robertodling/persisted-map/issues"
   },
-  "homepage": "https://github.com/robertodling/persistent-map"
+  "homepage": "https://github.com/robertodling/persisted-map"
 }
