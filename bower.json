@@ -1,6 +1,6 @@
 {
 	"name": "persisted-map",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"homepage": "https://github.com/robertodling/persisted-map",
 	"authors": [
 		"Robert Ödling <robert.odling@gmail.com>"
@@ -21,7 +21,8 @@
 	"license": "MIT",
 	"ignore": [
 		"**/.*",
-		"*.js",
+		"Gruntfile.js",
+		"karma.conf.js",
 		"**/*.json",
 		"node_modules",
 		"bower_components",
