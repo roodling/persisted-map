@@ -43,9 +43,9 @@ map.put('expireMe', 'noo', 5*60*1000);	// expiry entry in 5 minutes
 
 ## Installation
 
-  With [component(1)](http://component.io):
+  With [bower](http://bower.io):
 
-    $ component install [to be added]
+    $ bower install [to be added]
 
   With a stand-alone build
 
@@ -70,7 +70,7 @@ map.put('expireMe', 'noo', 5*60*1000);	// expiry entry in 5 minutes
     $ grunt develop
 
 
-## LICENSE
+## License
 
   MIT
 
