@@ -18,7 +18,9 @@
     "chai": "^1.9.1",
     "karma-chai": "^0.1.0",
     "grunt-karma": "^0.8.3",
-    "grunt-contrib-watch": "^0.6.1"
+    "grunt-contrib-watch": "^0.6.1",
+    "sinon": "^1.9.1",
+    "karma-sinon": "^1.0.3"
   },
   "scripts": {
     "test": "grunt ci"

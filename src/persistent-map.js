@@ -97,9 +97,10 @@
 			this.expiry = expiry;
 		},
 
-		put: function (key, value) {
+		put: function (key, value, expiry) {
+			expiry = expiry || this.expiry;
 			var map = this.peristedItem.retrieve();
-			map[key] = createEntry(value, this.expiry);
+			map[key] = createEntry(value, expiry);
 			this.peristedItem.store(map);
 		},
 		get: function (key) {
@@ -114,8 +115,7 @@
 			return entry && entry.value;
 		},
 		size: function () {
-			var map = this.peristedItem.retrieve();
-			return Object.keys(map).length;
+			return this.keys().length;
 		},
 		remove: function (key) {
 			var map = this.peristedItem.retrieve();
@@ -124,6 +124,10 @@
 		},
 		clear: function () {
 			this.peristedItem.clear();
+		},
+		keys: function () {
+			var map = this.peristedItem.retrieve();
+			return Object.keys(map);
 		}
 	};
 
@@ -133,15 +137,13 @@
 		var item;
 
 		if (!key) {
-			console.warn('You must provide key.');
-			return;
+			throw new Error('You must provide key.');
 		}
 
 		item = persistedItem.create(strategy || 'local', key);
 
 		if (!item) {
-			console.warn('Web storage "' + strategy + '" is not supported');
-			return;
+			throw new Error('Web storage "' + strategy + '" is not supported.');
 		}
 
 		map = Object.create(persistedMap);
