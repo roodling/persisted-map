@@ -1,61 +1,78 @@
-persistent-map
-==============
+# persisted-map
 
 > Lightweight map that persists to web storage.
 
-## Build and test
-
-``js
-grunt ci
-``
 
 ## Examples
 
-Create
+Creating
 
 ```js
 
-// create a map that is persisted to key 'my-map' in local storage.
-var map = persistantMap.create('my-map');
+var map = persistedMap.create('my-map'); 						// persisted to local storage under key 'my-map'
 
-// create a map that is persisted to key 'my-session-map' in session storage.
-var map = persistantMap.create('my-session-map', 'session');
+var map = persistedMap.create('my-map', 'session');				// persisted to session storage
+
+var map = persistedMap.create('my-map', 'local', 10*60*1000);	// expire entries in 10 minutes
+
 ```
 
-Put and get
+Operations
 
 ```js
-map.put('foo', 'bar');
 
-map.get('foo');	// 'bar'
-```
-
-Remove
-
-```js
-map.put('foo', 'bar');
-
-map.remove('foo');
-
-map.get('foo');	// undefined
-```
-
-Size
-
-```js
 map.put('foo', 'bar');
 map.put('hello', 'world');
 
-map.size();	// 2
+map.get('foo');		// 'bar'
+map.get('hello');	// 'world'
 
-```
+map.size();			// 2
 
-Clear
+map.keys();			// ["foo", "hello"]
 
-```js
+map.remove('foo');
 
 map.clear();
 
+map.put('expireMe', 'noo', 5*60*1000);	// expiry entry in 5 minutes
+
+
 ```
+
+
+## Installation
+
+  With [component(1)](http://component.io):
+
+    $ component install [to be added]
+
+  With a stand-alone build
+
+    <script src='persisted.map.min.js'></script>
+
+
+
+## Running tests and building
+
+  Install dependencies:
+
+     $ npm install
+
+  Run all tests and build once:
+
+    $ grunt ci
+
+  Development mode:
+
+    $ grunt test-server
+
+    $ grunt develop
+
+
+## LICENSE
+
+  MIT
+
 
 
